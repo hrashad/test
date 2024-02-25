@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Local Weather</title>
+    <script type="text/javascript">
+      const initialize = () => {
+        navigator.geolocation.getCurrentPosition(
+          getWeatherInfoByLocation,
+          handleError
+        );
+      };
+
+      const handleError = error => {
+        alert(`Unable to retrieve location: ${error.message}`);
+      };
+
+      const getWeatherInfoByLocation = position => {
+        const xhr = new XMLHttpRequest();
+        const lat = position.coords.latitude;
+        const long = position.coords.longitude;
+        const url = `https://api.openweathermap.org/data/2.5/weather?APPID=<APP_ID>⪫=${lat}&lon=${long}`;
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            showTemperature(JSON.parse(xhr.response));
+          }
+        };
+
+        xhr.open("get", url, true);
+        xhr.send();
+      };
+
+      const showTemperature = weatherInfo => {
+        const location = weatherInfo.name;
+        const temperature = Math.round(
+          ((weatherInfo.main.temp - 273.15) * 9) / 5 + 32
+        );
+        document.getElementById(
+          "weatherInfo"
+        ).innerHTML = `Current temperature in ${location} is ${temperature}°Fahrenheit `;
+      };
+    </script>
+  </head>
+  <body onload="initialize()">
+    <div>
+      <h1 id="weatherInfo">Retriving local weather information...</h1>
+    </div>
+  </body>
+</html>
